@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Connect - Análisis Financiero</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #34495e;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2980b9;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            background-color: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: linear-gradient(90deg, #34495e, #2c3e50);
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e8f4f8;
+        }
+        .currency {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        .formula {
+            background-color: #fff3cd;
+            padding: 8px;
+            border-left: 4px solid #ffc107;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .positive {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .negative {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .metric-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .download-btn {
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px 10px;
+            transition: all 0.3s ease;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            margin-right: 5px;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Health Connect - Análisis Financiero Completo</h1>
+        <h2>       Nicolas Machado Amaya - Juan Pablo Tuberquia - Luis Silva</h2>
+        
+        <div class="summary-box">
+            <h2 style="margin: 0; background: none; color: white; padding: 0;">Resumen Ejecutivo</h2>
+            <p>Plataforma Digital de Servicios de Salud en Bogotá</p>
+            <p><strong>Período de Análisis:</strong> Primeros 12 meses de operación (2025)</p>
+            <p><strong>Punto de Equilibrio:</strong> Mes 10 | <strong>EBITDA Positivo:</strong> Mes 11</p>
+        </div>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="showTab('plan-cuentas')">Plan de Cuentas</button>
+            <button class="tab" onclick="showTab('supuestos')">Supuestos Financieros</button>
+            <button class="tab" onclick="showTab('estados-financieros')">Estados Financieros</button>
+            <button class="tab" onclick="showTab('indicadores')">Indicadores</button>
+            <button class="tab" onclick="showTab('punto-equilibrio')">Punto de Equilibrio</button>
+            <button class="tab" onclick="showTab('flujo-caja')">Flujo de Caja</button>
+        </div>
+
+        <!-- Plan de Cuentas -->
+        <div id="plan-cuentas" class="tab-content active">
+            <h2>1. Plan de Cuentas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Cuenta</th>
+                        <th>Naturaleza</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="4" style="background:#34495e; color:white; font-weight:bold;">1. ACTIVOS</td></tr>
+                    <tr><td>1.1</td><td>Activos Corrientes</td><td>Débito</td><td>Balance</td></tr>
+                    <tr><td>1.1.1</td><td>Efectivo y Equivalentes</td><td>Débito</td><td>Balance</td></tr>
+                    <tr><td>1.1.2</td><td>Cuentas por Cobrar</td><td>Débito</td><td>Balance</td></tr>
+                    <tr><td>1.2</td><td>Activos No Corrientes</td><td>Débito</td><td>Balance</td></tr>
+                    <tr><td>1.2.1</td><td>Plataforma y Desarrollo Tecnológico</td><td>Débito</td><td>Balance</td></tr>
+                    <tr><td>1.2.2</td><td>Equipamiento de Oficina</td><td>Débito</td><td>Balance</td></tr>
+                    <tr><td>1.2.3</td><td>Certificaciones y Cumplimiento</td><td>Débito</td><td>Balance</td></tr>
+                    <tr><td>1.2.4</td><td>Depreciación Acumulada</td><td>Crédito</td><td>Balance</td></tr>
+                    
+                    <tr><td colspan="4" style="background:#34495e; color:white; font-weight:bold;">2. PASIVOS</td></tr>
+                    <tr><td>2.1</td><td>Pasivos Corrientes</td><td>Crédito</td><td>Balance</td></tr>
+                    <tr><td>2.1.1</td><td>Cuentas por Pagar</td><td>Crédito</td><td>Balance</td></tr>
+                    <tr><td>2.1.2</td><td>Obligaciones Laborales</td><td>Crédito</td><td>Balance</td></tr>
+                    <tr><td>2.2</td><td>Pasivos No Corrientes</td><td>Crédito</td><td>Balance</td></tr>
+                    <tr><td>2.2.1</td><td>Préstamos Bancarios LP</td><td>Crédito</td><td>Balance</td></tr>
+                    
+                    <tr><td colspan="4" style="background:#34495e; color:white; font-weight:bold;">3. PATRIMONIO</td></tr>
+                    <tr><td>3.1</td><td>Capital Social</td><td>Crédito</td><td>Balance</td></tr>
+                    <tr><td>3.2</td><td>Resultados Acumulados</td><td>Crédito</td><td>Balance</td></tr>
+                    
+                    <tr><td colspan="4" style="background:#34495e; color:white; font-weight:bold;">4. INGRESOS</td></tr>
+                    <tr><td>4.1</td><td>Ingresos por Comisiones</td><td>Crédito</td><td>Resultados</td></tr>
+                    
+                    <tr><td colspan="4" style="background:#34495e; color:white; font-weight:bold;">5. GASTOS</td></tr>
+                    <tr><td>5.1</td><td>Gastos de Personal</td><td>Débito</td><td>Resultados</td></tr>
+                    <tr><td>5.2</td><td>Gastos de Alquiler</td><td>Débito</td><td>Resultados</td></tr>
+                    <tr><td>5.3</td><td>Servicios Públicos</td><td>Débito</td><td>Resultados</td></tr>
+                    <tr><td>5.4</td><td>Servicios Cloud</td><td>Débito</td><td>Resultados</td></tr>
+                    <tr><td>5.5</td><td>Marketing</td><td>Débito</td><td>Resultados</td></tr>
+                    <tr><td>5.6</td><td>Investigación y Desarrollo</td><td>Débito</td><td>Resultados</td></tr>
+                    <tr><td>5.7</td><td>Seguros y Administrativos</td><td>Débito</td><td>Resultados</td></tr>
+                    <tr><td>5.8</td><td>Depreciación</td><td>Débito</td><td>Resultados</td></tr>
+                    <tr><td>5.9</td><td>Gastos Financieros</td><td>Débito</td><td>Resultados</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Supuestos Financieros -->
+        <div id="supuestos" class="tab-content">
+            <h2>2. Supuestos Financieros y Ecuaciones Base</h2>
+            
+            <h3>Supuestos de Ingresos</h3>
+            <div class="metric-card">
+                <div class="formula">Precio Promedio por Consulta = $185,000 COP</div>
+                <div class="formula">Tasa de Comisión = 10%</div>
+                <div class="formula">Ingreso por Transacción = Precio Consulta × Tasa Comisión</div>
+                <div class="formula">Ingreso por Transacción = $185,000 × 10% = $18,500 COP</div>
+            </div>
+
+            <h3>Proyección de Consultas Mensuales</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mes</th>
+                        <th>Consultas</th>
+                        <th>Crecimiento %</th>
+                        <th>Ingresos Brutos</th>
+                        <th>Comisión Health Connect</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td class="currency">500</td><td>-</td><td class="currency">$92,500,000</td><td class="currency">$9,250,000</td></tr>
+                    <tr><td>2</td><td class="currency">1,000</td><td>100%</td><td class="currency">$185,000,000</td><td class="currency">$18,500,000</td></tr>
+                    <tr><td>3</td><td class="currency">2,000</td><td>100%</td><td class="currency">$370,000,000</td><td class="currency">$37,000,000</td></tr>
+                    <tr><td>4</td><td class="currency">3,500</td><td>75%</td><td class="currency">$647,500,000</td><td class="currency">$64,750,000</td></tr>
+                    <tr><td>5</td><td class="currency">5,000</td><td>43%</td><td class="currency">$925,000,000</td><td class="currency">$92,500,000</td></tr>
+                    <tr><td>6</td><td class="currency">7,000</td><td>40%</td><td class="currency">$1,295,000,000</td><td class="currency">$129,500,000</td></tr>
+                    <tr><td>7</td><td class="currency">9,500</td><td>36%</td><td class="currency">$1,757,500,000</td><td class="currency">$175,750,000</td></tr>
+                    <tr><td>8</td><td class="currency">12,500</td><td>32%</td><td class="currency">$2,312,500,000</td><td class="currency">$231,250,000</td></tr>
+                    <tr><td>9</td><td class="currency">16,000</td><td>28%</td><td class="currency">$2,960,000,000</td><td class="currency">$296,000,000</td></tr>
+                    <tr><td>10</td><td class="currency">20,000</td><td>25%</td><td class="currency">$3,700,000,000</td><td class="currency">$370,000,000</td></tr>
+                    <tr><td>11</td><td class="currency">24,000</td><td>20%</td><td class="currency">$4,440,000,000</td><td class="currency">$444,000,000</td></tr>
+                    <tr><td>12</td><td class="currency">28,000</td><td>17%</td><td class="currency">$5,180,000,000</td><td class="currency">$518,000,000</td></tr>
+                </tbody>
+            </table>
+
+            <div class="formula">
+                <strong>Condiciones de Cobro:</strong><br>
+                Efectivo (80%) = Ingresos del Mes × 80%<br>
+                Crédito (20%) = Ingresos del Mes × 20% (se cobra al mes siguiente)
+            </div>
+        </div>
+
+        <!-- Estados Financieros -->
+        <div id="estados-financieros" class="tab-content">
+            <h2>3. Estados Financieros Proyectados</h2>
+            
+            <h3>Balance General Resumen (Millones COP)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Ene-2025</th>
+                        <th>Jun-2025</th>
+                        <th>Dic-2025</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="4" style="background:#2c3e50; color:white; font-weight:bold;">ACTIVOS</td></tr>
+                    <tr><td>Efectivo</td><td class="currency">580.0</td><td class="currency">36.6</td><td class="currency">982.5</td></tr>
+                    <tr><td>Cuentas por Cobrar</td><td class="currency">1.9</td><td class="currency">25.9</td><td class="currency">103.6</td></tr>
+                    <tr><td>Total Activos Corrientes</td><td class="currency">581.9</td><td class="currency">62.5</td><td class="currency">1,086.1</td></tr>
+                    <tr><td>Activos Fijos Netos</td><td class="currency">757.2</td><td class="currency">693.0</td><td class="currency">696.0</td></tr>
+                    <tr><td><strong>TOTAL ACTIVOS</strong></td><td class="currency"><strong>1,339.1</strong></td><td class="currency"><strong>755.5</strong></td><td class="currency"><strong>1,782.1</strong></td></tr>
+                    
+                    <tr><td colspan="4" style="background:#2c3e50; color:white; font-weight:bold;">PASIVOS</td></tr>
+                    <tr><td>Pasivos Corrientes</td><td class="currency">0.0</td><td class="currency">0.0</td><td class="currency">78.3</td></tr>
+                    <tr><td>Préstamos Bancarios LP</td><td class="currency">0.0</td><td class="currency">300.0</td><td class="currency">450.0</td></tr>
+                    <tr><td><strong>TOTAL PASIVOS</strong></td><td class="currency"><strong>0.0</strong></td><td class="currency"><strong>300.0</strong></td><td class="currency"><strong>528.3</strong></td></tr>
+                    
+                    <tr><td colspan="4" style="background:#2c3e50; color:white; font-weight:bold;">PATRIMONIO</td></tr>
+                    <tr><td>Capital Social</td><td class="currency">1,520.0</td><td class="currency">2,120.0</td><td class="currency">2,120.0</td></tr>
+                    <tr><td>Resultados Acumulados</td><td class="currency negative">(180.9)</td><td class="currency negative">(1,664.5)</td><td class="currency negative">(866.2)</td></tr>
+                    <tr><td><strong>TOTAL PATRIMONIO</strong></td><td class="currency"><strong>1,339.1</strong></td><td class="currency"><strong>455.5</strong></td><td class="currency"><strong>1,253.8</strong></td></tr>
+                </tbody>
+            </table>
+
+            <h3>Estado de Resultados Resumen (Millones COP)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Ene-2025</th>
+                        <th>Jun-2025</th>
+                        <th>Dic-2025</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Ingresos por Comisiones</td><td class="currency">9.3</td><td class="currency">129.5</td><td class="currency">518.0</td></tr>
+                    <tr><td><strong>TOTAL INGRESOS</strong></td><td class="currency"><strong>9.3</strong></td><td class="currency"><strong>129.5</strong></td><td class="currency"><strong>518.0</strong></td></tr>
+                    
+                    <tr><td>Gastos de Personal</td><td class="currency">83.0</td><td class="currency">166.0</td><td class="currency">215.8</td></tr>
+                    <tr><td>Alquiler</td><td class="currency">25.0</td><td class="currency">25.0</td><td class="currency">25.0</td></tr>
+                    <tr><td>Servicios Cloud</td><td class="currency">15.0</td><td class="currency">40.0</td><td class="currency">65.0</td></tr>
+                    <tr><td>Marketing</td><td class="currency">30.0</td><td class="currency">70.0</td><td class="currency">100.0</td></tr>
+                    <tr><td>I+D</td><td class="currency">1.4</td><td class="currency">19.4</td><td class="currency">77.7</td></tr>
+                    <tr><td>Otros Gastos</td><td class="currency">35.8</td><td class="currency">35.8</td><td class="currency">44.8</td></tr>
+                    <tr><td><strong>TOTAL GASTOS</strong></td><td class="currency"><strong>190.2</strong></td><td class="currency"><strong>356.2</strong></td><td class="currency"><strong>528.3</strong></td></tr>
+                    
+                    <tr><td><strong>RESULTADO NETO</strong></td><td class="currency negative"><strong>(180.9)</strong></td><td class="currency negative"><strong>(226.7)</strong></td><td class="currency negative"><strong>(14.8)</strong></td></tr>
+                </tbody>
+            </table>
+
+            <div class="formula">
+                <strong>Ecuaciones Estado de Resultados:</strong><br>
+                Resultado Operacional = Total Ingresos - Total Gastos Operativos<br>
+                Resultado Antes de Impuestos = Resultado Operacional - Gastos Financieros<br>
+                Resultado Neto = Resultado Antes de Impuestos - Impuestos
+            </div>
+        </div>
+
+        <!-- Indicadores -->
+        <div id="indicadores" class="tab-content">
+            <h2>4. Indicadores Financieros y Ecuaciones</h2>
+            
+            <h3>ROA - Rentabilidad sobre Activos</h3>
+            <div class="formula">
+                ROA = (Utilidad Neta / Activos Totales Promedio) × 100<br>
+                ROA = (Utilidad Neta Anualizada / Activos Promedio) × 100
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Período</th>
+                        <th>Utilidad Neta</th>
+                        <th>Activos Promedio</th>
+                        <th>ROA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Trimestre 1</td><td class="currency negative">(608.7)</td><td class="currency">1,245.8</td><td class="negative">-48.9%</td></tr>
+                    <tr><td>Trimestre 2</td><td class="currency negative">(706.9)</td><td class="currency">990.6</td><td class="negative">-71.4%</td></tr>
+                    <tr><td>Trimestre 3</td><td class="currency negative">(276.0)</td><td class="currency">1,042.8</td><td class="negative">-26.5%</td></tr>
+                    <tr><td>Trimestre 4</td><td class="currency negative">(118.0)</td><td class="currency">1,495.3</td><td class="negative">-7.9%</td></tr>
+                </tbody>
+            </table>
+
+            <h3>ROE - Rentabilidad sobre Patrimonio</h3>
+            <div class="formula">
+                ROE = (Utilidad Neta / Patrimonio Promedio) × 100<br>
+                Apalancamiento = Activos Totales / Patrimonio<br>
+                ROE = ROA × Apalancamiento
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Período</th>
+                        <th>ROA</th>
+                        <th>ROE</th>
+                        <th>Apalancamiento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Trimestre 1</td><td class="negative">-48.9%</td><td class="negative">-48.9%</td><td>1.00</td></tr>
+                    <tr><td>Trimestre 2</td><td class="negative">-71.4%</td><td class="negative">-77.4%</td><td>1.08</td></tr>
+                    <tr><td>Trimestre 3</td><td class="negative">-26.5%</td><td class="negative">-36.5%</td><td>1.38</td></tr>
+                    <tr><td>Trimestre 4</td><td class="negative">-7.9%</td><td class="negative">-12.4%</td><td>1.57</td></tr>
+                </tbody>
+            </table>
+
+            <h3>EBIT y EBITDA</h3>
+            <div class="formula">
+                EBIT = Ingresos Operacionales - Gastos Operacionales<br>
+                EBITDA = EBIT + Depreciación + Amortización<br>
+                Margen EBITDA = (EBITDA / Ingresos) × 100
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mes</th>
+                        <th>Ingresos</th>
+                        <th>Gastos Operativos</th>
+                        <th>Depreciación</th>
+                        <th>EBIT</th>
+                        <th>EBITDA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Enero</td><td class="currency">9.3</td><td class="currency">177.4</td><td class="currency">12.8</td><td class="currency negative">(180.9)</td><td class="currency negative">(168.1)</td></tr>
+                    <tr><td>Junio</td><td class="currency">129.5</td><td class="currency">343.4</td><td class="currency">12.8</td><td class="currency negative">(226.7)</td><td class="currency negative">(213.9)</td></tr>
+                    <tr><td>Noviembre</td><td class="currency">444.0</td><td class="currency">440.0</td><td class="currency">12.8</td><td class="currency negative">(8.8)</td><td class="currency positive">4.0</td></tr>
+                    <tr><td>Diciembre</td><td class="currency">518.0</td><td class="currency">515.5</td><td class="currency">12.8</td><td class="currency negative">(10.3)</td><td class="currency positive">2.5</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Punto de Equilibrio -->
+        <div id="punto-equilibrio" class="tab-content">
+            <h2>5. Análisis de Punto de Equilibrio</h2>
+            
+            <h3>Estructura de Costos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Valor Mensual (COP)</th>
+                        <th>Comportamiento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Gastos de Personal</td><td class="currency">180,000,000</td><td>Fijo</td></tr>
+                    <tr><td>Alquiler</td><td class="currency">25,000,000</td><td>Fijo</td></tr>
+                    <tr><td>Servicios Públicos</td><td class="currency">9,000,000</td><td>Semifijo</td></tr>
+                    <tr><td>Seguros y Administrativos</td><td class="currency">15,000,000</td><td>Fijo</td></tr>
+                    <tr><td>Depreciación</td><td class="currency">12,833,333</td><td>Fijo</td></tr>
+                    <tr><td><strong>Total Costos Fijos</strong></td><td class="currency"><strong>257,833,333</strong></td><td>-</td></tr>
+                    <tr><td><strong>Costo Variable Unitario</strong></td><td class="currency"><strong>2,950</strong></td><td>Variable</td></tr>
+                </tbody>
+            </table>
+
+            <div class="formula">
+                <strong>Cálculo del Punto de Equilibrio:</strong><br>
+                PE (unidades) = Costos Fijos / (Precio Unitario - Costo Variable Unitario)<br>
+                PE (unidades) = 257,833,333 / (18,500 - 2,950)<br>
+                PE (unidades) = 257,833,333 / 15,550<br>
+                <strong>PE = 16,581 consultas mensuales</strong><br><br>
+                
+                PE (valores) = PE (unidades) × Precio Unitario<br>
+                PE (valores) = 16,581 × 18,500<br>
+                <strong>PE = $306,748,500 COP mensuales</strong>
+            </div>
+
+            <h3>Evolución hacia el Punto de Equilibrio</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mes</th>
+                        <th>Consultas</th>
+                        <th>Ingresos (MM)</th>
+                        <th>% del PE</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Enero</td><td class="currency">500</td><td class="currency">9.3</td><td>3.0%</td><td class="negative">Déficit</td></tr>
+                    <tr><td>Junio</td><td class="currency">7,000</td><td class="currency">129.5</td><td>42.2%</td><td class="negative">Déficit</td></tr>
+                    <tr><td>Septiembre</td><td class="currency">16,000</td><td class="currency">296.0</td><td>96.5%</td><td class="negative">Cerca PE</td></tr>
+                    <tr><td>Octubre</td><td class="currency">20,000</td><td class="currency">370.0</td><td class="positive">120.6%</td><td class="positive">Equilibrio</td></tr>
+                    <tr><td>Diciembre</td><td class="currency">28,000</td><td class="currency">518.0</td><td class="positive">168.9%</td><td class="positive">Rentable</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Flujo de Caja -->
+        <div id="flujo-caja" class="tab-content">
+            <h2>6. Flujo de Caja Proyectado</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Trimestre 1</th>
+                        <th>Trimestre 2</th>
+                        <th>Trimestre 3</th>
+                        <th>Trimestre 4</th>
+                        <th>Total Año 1</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="6" style="background:#2c3e50; color:white; font-weight:bold;">ENTRADAS DE EFECTIVO</td></tr>
+                    <tr><td>Capital Inicial</td><td class="currency">1,520.0</td><td class="currency">0.0</td><td class="currency">0.0</td><td class="currency">0.0</td><td class="currency">1,520.0</td></tr>
+                    <tr><td>Aportes Adicionales</td><td class="currency">0.0</td><td class="currency">600.0</td><td class="currency">0.0</td><td class="currency">0.0</td><td class="currency">600.0</td></tr>
+                    <tr><td>Préstamos</td><td class="currency">0.0</td><td class="currency">0.0</td><td class="currency">300.0</td><td class="currency">150.0</td><td class="currency">450.0</td></tr>
+                    <tr><td>Cobros por Ventas</td><td class="currency">51.8</td><td class="currency">155.4</td><td class="currency">467.2</td><td class="currency">1,164.0</td><td class="currency">1,838.4</td></tr>
+                    <tr><td><strong>TOTAL ENTRADAS</strong></td><td class="currency"><strong>1,571.8</strong></td><td class="currency"><strong>780.4</strong></td><td class="currency"><strong>883.7</strong></td><td class="currency"><strong>1,605.0</strong></td><td class="currency"><strong>4,840.9</strong></td></tr>
+                    
+                    <tr><td colspan="6" style="background:#2c3e50; color:white; font-weight:bold;">SALIDAS DE EFECTIVO</td></tr>
+                    <tr><td>Activos Fijos</td><td class="currency">770.0</td><td class="currency">0.0</td><td class="currency">50.0</td><td class="currency">30.0</td><td class="currency">850.0</td></tr>
+                    <tr><td>Gastos Operativos</td><td class="currency">629.0</td><td class="currency">906.2</td><td class="currency">1,216.9</td><td class="currency">1,521.3</td><td class="currency">4,273.4</td></tr>
+                    <tr><td><strong>TOTAL SALIDAS</strong></td><td class="currency"><strong>1,399.0</strong></td><td class="currency"><strong>906.2</strong></td><td class="currency"><strong>1,266.9</strong></td><td class="currency"><strong>1,551.3</strong></td><td class="currency"><strong>5,123.4</strong></td></tr>
+                    
+                    <tr><td><strong>FLUJO NETO</strong></td><td class="currency positive"><strong>172.8</strong></td><td class="currency negative"><strong>(125.8)</strong></td><td class="currency negative"><strong>(383.2)</strong></td><td class="currency positive"><strong>53.7</strong></td><td class="currency negative"><strong>(282.5)</strong></td></tr>
+                </tbody>
+            </table>
+
+            <div class="formula">
+                <strong>Ecuaciones de Flujo de Caja:</strong><br>
+                Flujo Operativo = Cobros por Ventas - Gastos Operativos<br>
+                Flujo de Inversión = Compra de Activos Fijos<br>
+                Flujo de Financiamiento = Capital + Préstamos - Dividendos<br>
+                Flujo Neto del Período = Flujo Operativo - Flujo de Inversión + Flujo de Financiamiento<br>
+                Saldo Final = Saldo Inicial + Flujo Neto del Período
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="download-btn" onclick="downloadExcel()">📊 Descargar Excel Completo</button>
+            <button class="download-btn" onclick="downloadPDF()">📄 Descargar Reporte PDF</button>
+        </div>
+
+        <div class="summary-box" style="margin-top: 30px;">
+            <h3>Conclusiones Clave del Análisis</h3>
+            <ul style="text-align: left; max-width: 800px; margin: 0 auto;">
+                <li><strong>Punto de Equilibrio:</strong> Se alcanza en el mes 10 con 20,000 consultas mensuales</li>
+                <li><strong>EBITDA Positivo:</strong> A partir del mes 11 ($4.0 millones)</li>
+                <li><strong>Inversión Total Requerida:</strong> $2,570 millones COP</li>
+                <li><strong>ROA Evolutivo:</strong> Mejora de -195.4% (T1) a -31.5% (T4)</li>
+                <li><strong>Estructura de Capital:</strong> 70% patrimonio, 30% deuda al final del año</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Bibliotecas externas para Excel y PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todos los contenidos
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remover clase active de todos los tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Mostrar el contenido seleccionado
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar el tab clickeado
+            event.target.classList.add('active');
+        }
+
+        function downloadExcel() {
+            try {
+                // Crear un nuevo workbook
+                const wb = XLSX.utils.book_new();
+
+                // 1. Plan de Cuentas
+                const planCuentasData = [
+                    ['Código', 'Cuenta', 'Naturaleza', 'Tipo'],
+                    ['1', 'ACTIVOS', '', ''],
+                    ['1.1', 'Activos Corrientes', 'Débito', 'Balance'],
+                    ['1.1.1', 'Efectivo y Equivalentes', 'Débito', 'Balance'],
+                    ['1.1.2', 'Cuentas por Cobrar', 'Débito', 'Balance'],
+                    ['1.2', 'Activos No Corrientes', 'Débito', 'Balance'],
+                    ['1.2.1', 'Plataforma y Desarrollo Tecnológico', 'Débito', 'Balance'],
+                    ['1.2.2', 'Equipamiento de Oficina', 'Débito', 'Balance'],
+                    ['1.2.3', 'Certificaciones y Cumplimiento', 'Débito', 'Balance'],
+                    ['1.2.4', 'Depreciación Acumulada', 'Crédito', 'Balance'],
+                    ['2', 'PASIVOS', '', ''],
+                    ['2.1', 'Pasivos Corrientes', 'Crédito', 'Balance'],
+                    ['2.1.1', 'Cuentas por Pagar', 'Crédito', 'Balance'],
+                    ['2.1.2', 'Obligaciones Laborales', 'Crédito', 'Balance'],
+                    ['2.2', 'Pasivos No Corrientes', 'Crédito', 'Balance'],
+                    ['2.2.1', 'Préstamos Bancarios LP', 'Crédito', 'Balance'],
+                    ['3', 'PATRIMONIO', '', ''],
+                    ['3.1', 'Capital Social', 'Crédito', 'Balance'],
+                    ['3.2', 'Resultados Acumulados', 'Crédito', 'Balance'],
+                    ['4', 'INGRESOS', '', ''],
+                    ['4.1', 'Ingresos por Comisiones', 'Crédito', 'Resultados'],
+                    ['5', 'GASTOS', '', ''],
+                    ['5.1', 'Gastos de Personal', 'Débito', 'Resultados'],
+                    ['5.2', 'Gastos de Alquiler', 'Débito', 'Resultados'],
+                    ['5.3', 'Servicios Públicos', 'Débito', 'Resultados'],
+                    ['5.4', 'Servicios Cloud', 'Débito', 'Resultados'],
+                    ['5.5', 'Marketing', 'Débito', 'Resultados'],
+                    ['5.6', 'Investigación y Desarrollo', 'Débito', 'Resultados'],
+                    ['5.7', 'Seguros y Administrativos', 'Débito', 'Resultados'],
+                    ['5.8', 'Depreciación', 'Débito', 'Resultados'],
+                    ['5.9', 'Gastos Financieros', 'Débito', 'Resultados']
+                ];
+                const wsPlanCuentas = XLSX.utils.aoa_to_sheet(planCuentasData);
+                XLSX.utils.book_append_sheet(wb, wsPlanCuentas, 'Plan de Cuentas');
+
+                // 2. Supuestos y Proyecciones
+                const supuestosData = [
+                    ['SUPUESTOS FINANCIEROS - HEALTH CONNECT'],
+                    [''],
+                    ['Supuestos Base'],
+                    ['Precio Promedio por Consulta', 185000],
+                    ['Tasa de Comisión', '10%'],
+                    ['Ingreso por Transacción', '=B4*10%', 18500],
+                    [''],
+                    ['Proyección Mensual de Consultas'],
+                    ['Mes', 'Consultas', 'Crecimiento %', 'Ingresos Brutos', 'Comisión Health Connect'],
+                    [1, 500, '', '=B9*$B$4', '=D9*10%'],
+                    [2, 1000, '100%', '=B10*$B$4', '=D10*10%'],
+                    [3, 2000, '100%', '=B11*$B$4', '=D11*10%'],
+                    [4, 3500, '75%', '=B12*$B$4', '=D12*10%'],
+                    [5, 5000, '43%', '=B13*$B$4', '=D13*10%'],
+                    [6, 7000, '40%', '=B14*$B$4', '=D14*10%'],
+                    [7, 9500, '36%', '=B15*$B$4', '=D15*10%'],
+                    [8, 12500, '32%', '=B16*$B$4', '=D16*10%'],
+                    [9, 16000, '28%', '=B17*$B$4', '=D17*10%'],
+                    [10, 20000, '25%', '=B18*$B$4', '=D18*10%'],
+                    [11, 24000, '20%', '=B19*$B$4', '=D19*10%'],
+                    [12, 28000, '17%', '=B20*$B$4', '=D20*10%'],
+                    [''],
+                    ['TOTAL AÑO 1', '=SUM(B9:B20)', '', '=SUM(D9:D20)', '=SUM(E9:E20)']
+                ];
+                const wsSupuestos = XLSX.utils.aoa_to_sheet(supuestosData);
+                XLSX.utils.book_append_sheet(wb, wsSupuestos, 'Supuestos');
+
+                // 3. Balance General
+                const balanceData = [
+                    ['BALANCE GENERAL - HEALTH CONNECT (Millones COP)'],
+                    [''],
+                    ['Concepto', 'Ene-2025', 'Jun-2025', 'Dic-2025'],
+                    ['ACTIVOS'],
+                    ['Efectivo', 580.0, 36.6, 982.5],
+                    ['Cuentas por Cobrar', 1.9, 25.9, 103.6],
+                    ['Total Activos Corrientes', '=B5+B6', '=C5+C6', '=D5+D6'],
+                    ['Activos Fijos Brutos', 770.0, 770.0, 850.0],
+                    ['Depreciación Acumulada', -12.8, -77.0, -154.0],
+                    ['Activos Fijos Netos', '=B8+B9', '=C8+C9', '=D8+D9'],
+                    ['TOTAL ACTIVOS', '=B7+B10', '=C7+C10', '=D7+D10'],
+                    [''],
+                    ['PASIVOS'],
+                    ['Pasivos Corrientes', 0.0, 0.0, 78.3],
+                    ['Préstamos Bancarios LP', 0.0, 300.0, 450.0],
+                    ['TOTAL PASIVOS', '=B14+B15', '=C14+C15', '=D14+D15'],
+                    [''],
+                    ['PATRIMONIO'],
+                    ['Capital Social', 1520.0, 2120.0, 2120.0],
+                    ['Resultados Acumulados', -180.9, -1664.5, -866.2],
+                    ['TOTAL PATRIMONIO', '=B19+B20', '=C19+C20', '=D19+D20'],
+                    [''],
+                    ['VERIFICACIÓN', '=B11-B16-B21', '=C11-C16-C21', '=D11-D16-D21']
+                ];
+                const wsBalance = XLSX.utils.aoa_to_sheet(balanceData);
+                XLSX.utils.book_append_sheet(wb, wsBalance, 'Balance General');
+
+                // 4. Estado de Resultados
+                const resultadosData = [
+                    ['ESTADO DE RESULTADOS - HEALTH CONNECT (Millones COP)'],
+                    [''],
+                    ['Concepto', 'Ene-2025', 'Jun-2025', 'Dic-2025'],
+                    ['INGRESOS'],
+                    ['Ingresos por Comisiones', 9.3, 129.5, 518.0],
+                    ['TOTAL INGRESOS', '=B5', '=C5', '=D5'],
+                    [''],
+                    ['GASTOS OPERATIVOS'],
+                    ['Gastos de Personal', 83.0, 166.0, 215.8],
+                    ['Alquiler', 25.0, 25.0, 25.0],
+                    ['Servicios Públicos', 8.0, 8.0, 12.0],
+                    ['Servicios Cloud', 15.0, 40.0, 65.0],
+                    ['Marketing', 30.0, 70.0, 100.0],
+                    ['Investigación y Desarrollo', 1.4, 19.4, 77.7],
+                    ['Seguros y Administrativos', 15.0, 15.0, 20.0],
+                    ['Depreciación', 12.8, 12.8, 12.8],
+                    ['TOTAL GASTOS', '=SUM(B9:B16)', '=SUM(C9:C16)', '=SUM(D9:D16)'],
+                    [''],
+                    ['RESULTADO OPERACIONAL', '=B6-B17', '=C6-C17', '=D6-D17'],
+                    ['Gastos Financieros', 0.0, 0.0, 4.5],
+                    ['RESULTADO ANTES IMPUESTOS', '=B19-B20', '=C19-C20', '=D19-D20'],
+                    ['Impuesto sobre la Renta', 0.0, 0.0, 0.0],
+                    ['RESULTADO NETO', '=B21-B22', '=C21-C22', '=D21-D22'],
+                    [''],
+                    ['EBITDA', '=B19+B16', '=C19+C16', '=D19+D16'],
+                    ['Margen EBITDA', '=B25/B6', '=C25/C6', '=D25/D6']
+                ];
+                const wsResultados = XLSX.utils.aoa_to_sheet(resultadosData);
+                XLSX.utils.book_append_sheet(wb, wsResultados, 'Estado Resultados');
+
+                // 5. Indicadores Financieros
+                const indicadoresData = [
+                    ['INDICADORES FINANCIEROS - HEALTH CONNECT'],
+                    [''],
+                    ['ROA - Rentabilidad sobre Activos'],
+                    ['Período', 'Utilidad Neta', 'Activos Promedio', 'ROA %'],
+                    ['T1', -608.7, 1245.8, '=(B5/C5)*100'],
+                    ['T2', -706.9, 990.6, '=(B6/C6)*100'],
+                    ['T3', -276.0, 1042.8, '=(B7/C7)*100'],
+                    ['T4', -118.0, 1495.3, '=(B8/C8)*100'],
+                    [''],
+                    ['ROE - Rentabilidad sobre Patrimonio'],
+                    ['Período', 'ROA %', 'ROE %', 'Apalancamiento'],
+                    ['T1', -48.9, -48.9, 1.00],
+                    ['T2', -71.4, -77.4, 1.08],
+                    ['T3', -26.5, -36.5, 1.38],
+                    ['T4', -7.9, -12.4, 1.57],
+                    [''],
+                    ['Punto de Equilibrio'],
+                    ['Costos Fijos Mensuales', 257833333],
+                    ['Precio por Consulta', 18500],
+                    ['Costo Variable Unitario', 2950],
+                    ['Margen de Contribución', '=B19-B20'],
+                    ['PE en Consultas', '=B18/B21'],
+                    ['PE en Pesos', '=B22*B19']
+                ];
+                const wsIndicadores = XLSX.utils.aoa_to_sheet(indicadoresData);
+                XLSX.utils.book_append_sheet(wb, wsIndicadores, 'Indicadores');
+
+                // 6. Flujo de Caja
+                const flujoData = [
+                    ['FLUJO DE CAJA PROYECTADO - HEALTH CONNECT (Millones COP)'],
+                    [''],
+                    ['Concepto', 'T1', 'T2', 'T3', 'T4', 'Total Año'],
+                    ['ENTRADAS DE EFECTIVO'],
+                    ['Capital Inicial', 1520.0, 0.0, 0.0, 0.0, '=B5'],
+                    ['Aportes Adicionales', 0.0, 600.0, 0.0, 0.0, '=C6'],
+                    ['Préstamos', 0.0, 0.0, 300.0, 150.0, '=D7+E7'],
+                    ['Cobros por Ventas', 51.8, 155.4, 467.2, 1164.0, '=SUM(B8:E8)'],
+                    ['TOTAL ENTRADAS', '=SUM(B5:B8)', '=SUM(C5:C8)', '=SUM(D5:D8)', '=SUM(E5:E8)', '=SUM(B9:E9)'],
+                    [''],
+                    ['SALIDAS DE EFECTIVO'],
+                    ['Activos Fijos', 770.0, 0.0, 50.0, 30.0, '=SUM(B12:E12)'],
+                    ['Gastos Personal', 340.3, 473.1, 536.2, 635.1, '=SUM(B13:E13)'],
+                    ['Otros Gastos Operativos', 288.7, 433.1, 680.7, 886.2, '=SUM(B14:E14)'],
+                    ['TOTAL SALIDAS', '=SUM(B12:B14)', '=SUM(C12:C14)', '=SUM(D12:D14)', '=SUM(E12:E14)', '=SUM(B15:E15)'],
+                    [''],
+                    ['FLUJO NETO DEL PERÍODO', '=B9-B15', '=C9-C15', '=D9-D15', '=E9-E15', '=SUM(B17:E17)'],
+                    ['Saldo Inicial', 0.0, '=B18', '=B18+C17', '=C18+D17', ''],
+                    ['SALDO FINAL', '=B17+B18', '=C17+C18', '=D17+D18', '=E17+E18', '=E19']
+                ];
+                const wsFlujo = XLSX.utils.aoa_to_sheet(flujoData);
+                XLSX.utils.book_append_sheet(wb, wsFlujo, 'Flujo de Caja');
+
+                // Generar el archivo Excel
+                XLSX.writeFile(wb, 'Health_Connect_Analisis_Financiero.xlsx');
+                
+                // Mostrar mensaje de éxito
+                setTimeout(() => {
+                    alert('✅ Excel descargado exitosamente!\n\nEl archivo contiene:\n• Plan de Cuentas\n• Supuestos con fórmulas\n• Estados Financieros\n• Indicadores calculados\n• Flujo de Caja proyectado');
+                }, 500);
+
+            } catch (error) {
+                console.error('Error al generar Excel:', error);
+                alert('❌ Error al generar el archivo Excel. Verifica que las bibliotecas estén cargadas correctamente.');
+            }
+        }
+
+        function downloadPDF() {
+            try {
+                const element = document.querySelector('.container');
+                const opt = {
+                    margin: 0.5,
+                    filename: 'Health_Connect_Reporte_Financiero.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        useCORS: true,
+                        letterRendering: true,
+                        allowTaint: true
+                    },
+                    jsPDF: { 
+                        unit: 'in', 
+                        format: 'a4', 
+                        orientation: 'portrait',
+                        compressPDF: true
+                    },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                };
+
+                // Mostrar mensaje de procesamiento
+                const originalButton = event.target;
+                const originalText = originalButton.textContent;
+                originalButton.textContent = '⏳ Generando PDF...';
+                originalButton.disabled = true;
+
+                html2pdf().set(opt).from(element).save().then(() => {
+                    // Restaurar botón
+                    originalButton.textContent = originalText;
+                    originalButton.disabled = false;
+                    
+                    setTimeout(() => {
+                        alert('✅ PDF descargado exitosamente!\n\nEl reporte incluye:\n• Análisis financiero completo\n• Estados financieros\n• Indicadores clave\n• Gráficos y tablas\n• Conclusiones del análisis');
+                    }, 1000);
+                }).catch((error) => {
+                    console.error('Error al generar PDF:', error);
+                    originalButton.textContent = originalText;
+                    originalButton.disabled = false;
+                    alert('❌ Error al generar el PDF. Intenta nuevamente.');
+                });
+
+            } catch (error) {
+                console.error('Error al inicializar PDF:', error);
+                alert('❌ Error al generar el PDF. Verifica que las bibliotecas estén cargadas correctamente.');
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar que las bibliotecas estén cargadas
+            if (typeof XLSX === 'undefined') {
+                console.warn('XLSX library not loaded');
+            }
+            if (typeof html2pdf === 'undefined') {
+                console.warn('html2pdf library not loaded');
+            }
+            
+            console.log('🚀 Health Connect Financial Analysis loaded successfully');
+            console.log('📊 Excel and PDF download functions are ready');
+        });
+    </script>
+</body>
+</html>
